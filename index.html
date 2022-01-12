@@ -154,27 +154,34 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-First-Artical" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-变量在内存中的位置和访问方式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/01/09/First-Artical/">First Artical</a>
+      <a class="article-title" href="/2022/01/12/%E5%8F%98%E9%87%8F%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E5%92%8C%E8%AE%BF%E9%97%AE%E6%96%B9%E5%BC%8F/">变量在内存中的位置和访问方式</a>
     </h1>
   
 
         
-        <a href="/2022/01/09/First-Artical/" class="archive-article-date">
-  	<time datetime="2022-01-09T07:21:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-09</time>
+        <a href="/2022/01/12/%E5%8F%98%E9%87%8F%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E5%92%8C%E8%AE%BF%E9%97%AE%E6%96%B9%E5%BC%8F/" class="archive-article-date">
+  	<time datetime="2022-01-12T02:58:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-12</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="变量类型及特性"><a href="#变量类型及特性" class="headerlink" title="变量类型及特性"></a><strong>变量类型及特性</strong></h1><p>&emsp; 变量有静态变量、全局变量、局部变量和堆变量，他们有各自的作用域和生命周期。  </p>
+<h1 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a><strong>全局变量</strong></h1><p>&emsp; 全局变量和常量有着相同的特征，在程序执行前就存在了，常量存在于只读数据节中，而全局变量存在于可读写数据节中。其生命周期起始于所在执行文件被操作系统加载后和执行第一条代码之前；程序结束运行并退出后，全局变量才会被销毁。全局变量所在地址为数据区，使用立即数间接访问，其在内存中的地址顺序是先定义变量在低地址，后定义变量在高地址。  </p>
+<h1 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a><strong>局部变量</strong></h1><p>&emsp; 局部变量其生命周期和函数作用域一致，其所在地址为栈区，使用ebp和esp间接访问。  </p>
+<h1 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a><strong>静态变量</strong></h1><p>&emsp; 静态变量存在与可读写数据节中，其分为全局静态变量和局部静态变量。</p>
+<h2 id="全局静态变量"><a href="#全局静态变量" class="headerlink" title="全局静态变量"></a>全局静态变量</h2><p>&emsp; 全局静态变量和全局变量类似，在反汇编代码中其二者并无二致，它们在内存结构和访问原理上都是相同的，其等价于编译器限制外部源码文件访问的全局变量。</p>
+<h2 id="局部静态变量"><a href="#局部静态变量" class="headerlink" title="局部静态变量"></a>局部静态变量</h2><p>&emsp; 局部静态变量不会随作用域的结束而消失，并且其在未进入作用域之前就已经存在了，其生命周期和全局变量相同，其也保存在执行文件的数据区，其只能被初始化一次，程序使用初始化标记来确保其只能被初始化一次，若初始化的数值为常量，多次初始化也不会产生变化，则无需初始化标志，编译器为了提升效率，优化代码，将其转化为全局变量，但不可以超出其作用域访问。编译器可以通过粉碎法，让其他作用域对局部变量不可见。我们可以通过查找编译后的obj文件来定位粉碎后的名称位置，我们使用winhex打开文件后，用Ctrl+F快速查找字符串，输入原静态变量的名称，就可以快速定位到该静态变量粉碎后的名称位置。  </p>
+<h1 id="堆变量"><a href="#堆变量" class="headerlink" title="堆变量"></a><strong>堆变量</strong></h1><p>&emsp; 其通过malloc和new申请堆空间，调用free和delete释放对应的堆。在申请堆空间的过程中调用了函数_malloc_dbg,_malloc_dbg最后调用了heap_alloc_dbg_internal,其中使用了_CrtMemBlockHeader结构，此结构中包括前指针pBlockHeaaderPrev和后指针pBlockHeaderNext，通过这两个指针可以遍历程序中申请的所有堆空间，成员IRequest记录了当前堆是第几次申请的，成员gap为保存对数据的数组，在debug版本下，这个数据前后四个字节被初始化为0xFD，用来检测堆数据访问是否越界。</p>
+
       
 
       
@@ -182,22 +189,11 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">新的开始一起向前</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/01/09/First-Artical/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/01/12/%E5%8F%98%E9%87%8F%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E5%92%8C%E8%AE%BF%E9%97%AE%E6%96%B9%E5%BC%8F/">展开全文 >></a>
         </p>
       
 
@@ -227,39 +223,34 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-函数工作原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/01/09/hello-world/">Hello World</a>
+      <a class="article-title" href="/2022/01/11/%E5%87%BD%E6%95%B0%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">函数工作原理</a>
     </h1>
   
 
         
-        <a href="/2022/01/09/hello-world/" class="archive-article-date">
-  	<time datetime="2022-01-09T07:18:28.104Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-09</time>
+        <a href="/2022/01/11/%E5%87%BD%E6%95%B0%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" class="archive-article-date">
+  	<time datetime="2022-01-11T11:28:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-11</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h1 id="什么是栈和栈帧"><a href="#什么是栈和栈帧" class="headerlink" title="什么是栈和栈帧"></a><strong>什么是栈和栈帧</strong></h1><p>&emsp; 栈是一段“先进后出”的存储空间，push和pop分别进行压栈与出栈操作，esp和ebp两个栈寄存器指针保存当前栈的起始地址和结束地址（栈顶和栈底），在32位和64位程序中，每个数据分别占4字节和8字节的存储空间，栈顶和栈底之间的这段空间就被称为栈帧。  </p>
+<h1 id="函数调用方式"><a href="#函数调用方式" class="headerlink" title="函数调用方式"></a><strong>函数调用方式</strong></h1><h2 id="cdecl"><a href="#cdecl" class="headerlink" title="_cdecl:"></a>_cdecl:</h2><p>&emsp; C\C++默认调用方式，由调用方平衡栈，不定参数的函数可以使用这种方式（例如_scanf和_printf都使用这种调用约定）。</p>
+<h2 id="stdcall"><a href="#stdcall" class="headerlink" title="_stdcall:"></a>_stdcall:</h2><p>&emsp; 被调用方平衡栈，不定参数的函数无法使用这种方式。</p>
+<p>&emsp; 在未优化的情况下，检查ret处是否有平衡操作即可判断，_stdcall会在ret处进行平衡操作,而_cdecl调用方式在函数内没有平衡操作，而是退出函数后通过修改esp完成栈平衡操作。</p>
+<h2 id="fastcall"><a href="#fastcall" class="headerlink" title="_fastcall:"></a>_fastcall:</h2><p>&emsp; 寄存器方式传参，被调用方平衡栈，不定参数无法使用这种方式。32位程序中，其使用了ecx和edx两个寄存器，分别用来传递第一个和第二个参数，其余参数通过栈传参方式传递。  </p>
+<h2 id="x64调用约定："><a href="#x64调用约定：" class="headerlink" title="x64调用约定："></a>x64调用约定：</h2><p>&emsp; x64调用约定现在被统一为一种_fastcall，前4个参数分别使用rcx,rdx,r8,r9进行传递，其于参数从右向左依次入栈，其中任何大于8字节，或不是1、2、4、8字节的参数通过引用进行传递，前四个参数若是浮点数，使用XMM寄存器进行传递，从XMM0到XMM3。为了避免寄存不足的问题，在栈中依然为前四个参数预留了32字节的空间，预留空间的提前申请和结束平衡都由函数调用者负责。寄存器与参数标号是一一对应的。    </p>
+<h1 id="寻址方式"><a href="#寻址方式" class="headerlink" title="寻址方式"></a><strong>寻址方式</strong></h1><p>&emsp; 有ebp和esp寻址两种方式，若使用esp寻址会相对ebp寻址而言节省一个寄存器资源。在使用esp寻址的情况下，ida中为了方便访问变量，事先将每个变量的偏移值计算出来，得到一个固定的偏移值用标号记录，使用的是调整前的esp作为基址进行寻址。  </p>
+<h1 id="函数的参数"><a href="#函数的参数" class="headerlink" title="函数的参数"></a><strong>函数的参数</strong></h1><p>&emsp; 函数参数从右向左依次入栈，其中正数表示参数，负数表示局部变量，0表示返回地址。在参数入栈后出现如push ecx这样的语句，如何判断其是否是保存寄存器环境，可以到末尾定位是否有pop exc这样的语句与之对应，来做一个大致的判断，若其后没有与之对应的语句，可能是用其替代高周期的sub esp,4来为局部变量开辟空间。</p>
 
       
 
@@ -272,7 +263,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/01/09/hello-world/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/01/11/%E5%87%BD%E6%95%B0%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">展开全文 >></a>
         </p>
       
 
@@ -393,10 +384,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">新的开始一起向前</a>
-              </li>
             
             <div class="clearfix"></div>
           </ul>
